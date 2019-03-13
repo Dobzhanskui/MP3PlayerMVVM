@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Threading;
 
 namespace MVVM_Player.Helpers.MediaBehaviour
 {
-    public class MediaBehaviour
+    public class MediaBehaviour : DependencyObject
     {
         #region Members
 
@@ -29,20 +30,28 @@ namespace MVVM_Player.Helpers.MediaBehaviour
         new FrameworkPropertyMetadata(new PropertyChangedCallback(MediaOpenedCommandChanged)));
 
         public static readonly DependencyProperty MediaEndedCommandParameterProperty =
-          DependencyProperty.RegisterAttached("MediaEndedCommandParameter", typeof(object), typeof(MediaBehaviour),
-          new FrameworkPropertyMetadata(null));
+        DependencyProperty.RegisterAttached("MediaEndedCommandParameter", typeof(object), typeof(MediaBehaviour),
+        new FrameworkPropertyMetadata(null));
 
         public static readonly DependencyProperty SliderValueChangedCommandProperty =
-         DependencyProperty.RegisterAttached("SliderValueChangedCommand", typeof(ICommand), typeof(MediaBehaviour),
-         new FrameworkPropertyMetadata(new PropertyChangedCallback(SliderValueChangedCommandChanged)));
+        DependencyProperty.RegisterAttached("SliderValueChangedCommand", typeof(ICommand), typeof(MediaBehaviour),
+        new FrameworkPropertyMetadata(new PropertyChangedCallback(SliderValueChangedCommandChanged)));
 
-        public static readonly DependencyProperty ButtonMoveRightCommandProperty =
-         DependencyProperty.RegisterAttached("ButtonMoveRightCommand", typeof(ICommand), typeof(MediaBehaviour),
-         new FrameworkPropertyMetadata(new PropertyChangedCallback(ButtonMoveRightCommandChanged)));
+        public static readonly DependencyProperty ButtonClickRightCommandProperty =
+        DependencyProperty.RegisterAttached("ButtonClickRightCommand", typeof(ICommand), typeof(MediaBehaviour),
+        new FrameworkPropertyMetadata(new PropertyChangedCallback(ButtonClickRightCommandChanged)));
 
-        public static readonly DependencyProperty ButtonMoveLeftCommandProperty =
-        DependencyProperty.RegisterAttached("ButtonMoveLeftCommand", typeof(ICommand), typeof(MediaBehaviour),
-        new FrameworkPropertyMetadata(new PropertyChangedCallback(ButtonMoveLeftCommandChanged)));
+        public static readonly DependencyProperty ButtonClickLeftCommandProperty =
+        DependencyProperty.RegisterAttached("ButtonClickLeftCommand", typeof(ICommand), typeof(MediaBehaviour),
+        new FrameworkPropertyMetadata(new PropertyChangedCallback(ButtonClickLeftCommandChanged)));
+
+        public static readonly DependencyProperty ButtonRandomCommandProperty =
+        DependencyProperty.RegisterAttached("ButtonRandomCommand", typeof(ICommand), typeof(MediaBehaviour),
+        new FrameworkPropertyMetadata(new PropertyChangedCallback(ButtonRandomCommandChanged)));
+
+        public static readonly DependencyProperty ButtonReplayCommandProperty =
+        DependencyProperty.RegisterAttached("ButtonReplayCommand", typeof(ICommand), typeof(MediaBehaviour),
+        new FrameworkPropertyMetadata(new PropertyChangedCallback(ButtonReplayCommandChanged)));
 
         #endregion // DependencyProperty
 
@@ -106,7 +115,7 @@ namespace MVVM_Player.Helpers.MediaBehaviour
             }
         }
 
-        public static void ButtonMoveRightCommandChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+        public static void ButtonClickRightCommandChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
         {
             if (dependencyObject is Button button)
             {
@@ -121,7 +130,7 @@ namespace MVVM_Player.Helpers.MediaBehaviour
             }
         }
 
-        public static void ButtonMoveLeftCommandChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+        public static void ButtonClickLeftCommandChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
         {
             if (dependencyObject is Button button)
             {
@@ -132,6 +141,35 @@ namespace MVVM_Player.Helpers.MediaBehaviour
                 else if (e.OldValue != null && e.NewValue == null)
                 {
                     button.Click -= Button_MoveLeftClick;
+                }
+            }
+        }
+        public static void ButtonRandomCommandChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+        {
+            if (dependencyObject is ToggleButton toggleButton)
+            {
+                if (e.OldValue == null && e.NewValue != null)
+                {
+                    toggleButton.Click += toggleButton_RandomClick;
+                }
+                else if (e.OldValue != null && e.NewValue == null)
+                {
+                    toggleButton.Click -= toggleButton_RandomClick;
+                }
+            }
+        }
+
+        public static void ButtonReplayCommandChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+        {
+            if (dependencyObject is ToggleButton toggleButton)
+            {
+                if (e.OldValue == null && e.NewValue != null)
+                {
+                    toggleButton.Click += toggleButton_ReplayClick;
+                }
+                else if (e.OldValue != null && e.NewValue == null)
+                {
+                    toggleButton.Click -= toggleButton_ReplayClick;
                 }
             }
         }
@@ -161,14 +199,24 @@ namespace MVVM_Player.Helpers.MediaBehaviour
             uiElement.SetValue(SliderValueChangedCommandProperty, value);
         }
 
-        public static void SetButtonMoveRightCommand(UIElement uiElement, ICommand value)
+        public static void SetButtonClickRightCommand(UIElement uiElement, ICommand value)
         {
-            uiElement.SetValue(ButtonMoveRightCommandProperty, value);
+            uiElement.SetValue(ButtonClickRightCommandProperty, value);
         }
 
-        public static void SetButtonMoveLeftCommand(UIElement uiElement, ICommand value)
+        public static void SetButtonClickLeftCommand(UIElement uiElement, ICommand value)
         {
-            uiElement.SetValue(ButtonMoveLeftCommandProperty, value);
+            uiElement.SetValue(ButtonClickLeftCommandProperty, value);
+        }
+
+        public static void SetButtonRandomCommand(UIElement uiElement, ICommand value)
+        {
+            uiElement.SetValue(ButtonRandomCommandProperty, value);
+        }
+
+        public static void SetButtonReplayCommand(UIElement uiElement, ICommand value)
+        {
+            uiElement.SetValue(ButtonReplayCommandProperty, value);
         }
 
         public static ICommand GetMediaEndedCommand(UIElement element)
@@ -186,11 +234,17 @@ namespace MVVM_Player.Helpers.MediaBehaviour
         public static ICommand GetSliderValueChangedCommand(UIElement element)
            => (ICommand)element.GetValue(SliderValueChangedCommandProperty);
 
-        public static ICommand GetButtonMoveRightCommand(UIElement element)
-           => (ICommand)element.GetValue(ButtonMoveRightCommandProperty);
+        public static ICommand GetButtonClickRightCommand(UIElement element)
+           => (ICommand)element.GetValue(ButtonClickRightCommandProperty);
 
-        public static ICommand GetButtonMoveLeftCommand(UIElement element)
-           => (ICommand)element.GetValue(ButtonMoveLeftCommandProperty);
+        public static ICommand GetButtonClickLeftCommand(UIElement element)
+           => (ICommand)element.GetValue(ButtonClickLeftCommandProperty);
+
+        public static ICommand GetButtonRandomCommand(UIElement element)
+           => (ICommand)element.GetValue(ButtonRandomCommandProperty);
+
+        public static ICommand GetButtonReplayCommand(UIElement element)
+           => (ICommand)element.GetValue(ButtonReplayCommandProperty);
 
         #endregion // Commands
 
@@ -258,6 +312,30 @@ namespace MVVM_Player.Helpers.MediaBehaviour
             if (m_timerTrack.Tag is MediaElement mediaElement)
             {
                 mediaElement.Position = TimeSpan.FromSeconds(mediaElement.Position.TotalSeconds - 15);
+            }
+        }
+
+        private static void toggleButton_RandomClick(object sender, RoutedEventArgs e)
+        {
+            if (sender is ToggleButton toggleButton)
+            {
+                var command = GetButtonRandomCommand(toggleButton);
+                if (command != null)
+                {
+                    command.Execute(toggleButton.IsChecked);
+                }
+            }
+        }
+
+        private static void toggleButton_ReplayClick(object sender, RoutedEventArgs e)
+        {
+            if (sender is ToggleButton toggleButton)
+            {
+                var command = GetButtonReplayCommand(toggleButton);
+                if (command != null)
+                {
+                    command.Execute(toggleButton.IsChecked);
+                }
             }
         }
 

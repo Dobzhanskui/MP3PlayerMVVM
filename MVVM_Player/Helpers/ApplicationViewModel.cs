@@ -32,15 +32,19 @@ namespace MVVM_Player
         private double m_sliderMinimum;
         private double m_sliderMaximum;
         private Track m_selectedTrack;
+        private bool m_randomTracks;
+        private bool m_replayTracks;
 
         #region Media
 
         private RelayCommand m_mediaEndedCommand;
         private RelayCommand m_mediaOpenedCommand;
         private RelayCommand m_timerTrackCommand;
-        private RelayCommand m_sliderValueChangedCommand;
-        private RelayCommand m_moveRightCommand;
-        private RelayCommand m_moveLeftCommand;
+        private RelayCommand m_buttonRandomCommand;
+        private RelayCommand m_buttonReplayCommand;
+        //private RelayCommand m_sliderValueChangedCommand;
+        //private RelayCommand m_moveRightCommand;
+        //private RelayCommand m_moveLeftCommand;
 
         #endregion // Media
 
@@ -131,6 +135,7 @@ namespace MVVM_Player
         {
             if (obj is Track track)
             {
+                LoadedMode = MediaState.Close;
                 NextPlayTrack(track);
             }
         }));
@@ -156,32 +161,48 @@ namespace MVVM_Player
             }
         }));
 
-        public RelayCommand SliderValueChangedCommand => m_sliderValueChangedCommand ?? (m_sliderValueChangedCommand = new RelayCommand(obj =>
+        public RelayCommand ButtonRandomCommand => m_buttonRandomCommand ?? (m_buttonRandomCommand = new RelayCommand(obj =>
         {
-            if (obj is TimeSpan position)
+            if (obj is bool isRandomTracks)
             {
-                StartTimeTrackPosition = position.ToString("mm\\:ss");
-                SliderValue = position.TotalSeconds;
+                m_randomTracks = isRandomTracks;
             }
         }));
 
-        public RelayCommand MoveRightCommand => m_moveRightCommand ?? (m_moveRightCommand = new RelayCommand(obj =>
+        public RelayCommand ButtonReplayCommand => m_buttonReplayCommand ?? (m_buttonReplayCommand = new RelayCommand(obj =>
         {
-            if (obj is TimeSpan position)
+            if (obj is bool isReplayTracks)
             {
-                StartTimeTrackPosition = position.ToString("mm\\:ss");
-                SliderValue = position.TotalSeconds;
+                m_replayTracks = isReplayTracks;
             }
         }));
 
-        public RelayCommand MoveLeftCommand => m_moveLeftCommand ?? (m_moveLeftCommand = new RelayCommand(obj =>
-        {
-            if (obj is TimeSpan position)
-            {
-                StartTimeTrackPosition = position.ToString("mm\\:ss");
-                SliderValue = position.TotalSeconds;
-            }
-        }));
+        //public RelayCommand SliderValueChangedCommand => m_sliderValueChangedCommand ?? (m_sliderValueChangedCommand = new RelayCommand(obj =>
+        //{
+        //    if (obj is TimeSpan position)
+        //    {
+        //        StartTimeTrackPosition = position.ToString("mm\\:ss");
+        //        SliderValue = position.TotalSeconds;
+        //    }
+        //}));
+
+        //public RelayCommand MoveRightCommand => m_moveRightCommand ?? (m_moveRightCommand = new RelayCommand(obj =>
+        //{
+        //    if (obj is TimeSpan position)
+        //    {
+        //        StartTimeTrackPosition = position.ToString("mm\\:ss");
+        //        SliderValue = position.TotalSeconds;
+        //    }
+        //}));
+
+        //public RelayCommand MoveLeftCommand => m_moveLeftCommand ?? (m_moveLeftCommand = new RelayCommand(obj =>
+        //{
+        //    if (obj is TimeSpan position)
+        //    {
+        //        StartTimeTrackPosition = position.ToString("mm\\:ss");
+        //        SliderValue = position.TotalSeconds;
+        //    }
+        //}));
 
         public Uri CurrentTrack
         {
@@ -344,9 +365,24 @@ namespace MVVM_Player
         {
             if (PlayList.Count > 0)
             {
-                var currentIndexTrack = PlayList.IndexOf(selectedTrack);
-                var nextIndexTrack = currentIndexTrack + 1;
-                var nextTrack = nextIndexTrack < PlayList.Count ? PlayList[nextIndexTrack] : PlayList.FirstOrDefault();
+                var nextTrack = default(Track);
+                if (m_randomTracks)
+                {
+                    var randomTrack = new Random();
+                    var nextIndexTrack = randomTrack.Next(0, PlayList.Count);
+                    nextTrack = PlayList[nextIndexTrack];
+                }
+                else
+                {
+                    var currentIndexTrack = PlayList.IndexOf(selectedTrack);
+                    var nextIndexTrack = currentIndexTrack + 1;
+                    nextTrack = m_replayTracks ? 
+                        selectedTrack : 
+                        nextIndexTrack < PlayList.Count ? 
+                        PlayList[nextIndexTrack] : 
+                        PlayList.FirstOrDefault();
+                }
+              
                 CurrentTrack = nextTrack.Source;
                 CurrentNameTrack = Path.GetFileNameWithoutExtension(nextTrack.FullName);
                 SelectedTrack = nextTrack;

@@ -19,7 +19,7 @@
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button media:MediaBehaviour.ButtonMoveLeftCommand="{Binding MoveLeftCommand}">
+                <Button media:MediaBehaviour.ButtonClickLeftCommand="{Binding TimerTrackCommand}">
                     <Image Source="Images/moveLeft5.png"/>
                 </Button>
                 <Button Command="{Binding PauseCommand}">
@@ -31,14 +31,14 @@
                 <Button Command="{Binding PlayCommand}" CommandParameter="{Binding SelectedTrack}">
                     <Image Source="Images/play.png"/>
                 </Button>
-                <Button media:MediaBehaviour.ButtonMoveRightCommand="{Binding MoveRightCommand}">
+                <Button media:MediaBehaviour.ButtonClickRightCommand="{Binding TimerTrackCommand}">
                     <Image Source="Images/moveRight5.png"/>
                 </Button>
 
-                <ToggleButton>
+                <ToggleButton media:MediaBehaviour.ButtonReplayCommand="{Binding ButtonReplayCommand}">
                     <Image Source="Images/replay.png"/>
                 </ToggleButton>
-                <ToggleButton>
+                <ToggleButton media:MediaBehaviour.ButtonRandomCommand="{Binding ButtonRandomCommand}">
                     <Image Source="Images/Random.png"/>
                 </ToggleButton>
             </StackPanel>
@@ -51,7 +51,7 @@
                 Value="{Binding SliderValue}" 
                 Minimum="{Binding SliderMinimum}" 
                 Maximum="{Binding SliderMaximum}"
-                media:MediaBehaviour.SliderValueChangedCommand="{Binding SliderValueChangedCommand}"/>
+                media:MediaBehaviour.SliderValueChangedCommand="{Binding TimerTrackCommand}"/>
 
             <StackPanel Orientation="Vertical" VerticalAlignment="Bottom">
                 <MediaElement 
