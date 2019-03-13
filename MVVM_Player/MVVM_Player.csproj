@@ -67,6 +67,7 @@
     <Compile Include="Helpers\ApplicationViewModel.cs" />
     <Compile Include="Helpers\CommandBehaviour.cs" />
     <Compile Include="Helpers\Command\RelayCommand.cs" />
+    <Compile Include="Helpers\MediaBehaviour\MediaBehaviour.cs" />
     <Compile Include="Helpers\PlayList.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

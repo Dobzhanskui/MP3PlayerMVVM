@@ -1,15 +1,14 @@
 ﻿using MVVM_Player.Helpers;
 using MVVM_Player.Helpers.Command;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
-using System.Windows.Threading;
 
 namespace MVVM_Player
 {
@@ -26,13 +25,24 @@ namespace MVVM_Player
         private Uri m_currentTrack;
         private string m_currentNameTrack;
         private MediaState m_loadedMode;
-        //private DispatcherTimer m_timerTrack;
         private string m_startTimeTrackPosition;
         private string m_endTimeTrackPosition;
         private TimeSpan m_positionTrack;
         private double m_sliderValue;
+        private double m_sliderMinimum;
         private double m_sliderMaximum;
         private Track m_selectedTrack;
+
+        #region Media
+
+        private RelayCommand m_mediaEndedCommand;
+        private RelayCommand m_mediaOpenedCommand;
+        private RelayCommand m_timerTrackCommand;
+        private RelayCommand m_sliderValueChangedCommand;
+        private RelayCommand m_moveRightCommand;
+        private RelayCommand m_moveLeftCommand;
+
+        #endregion // Media
 
         #endregion // Commands
 
@@ -42,11 +52,7 @@ namespace MVVM_Player
         {
             StartTimeTrackPosition = "00:00";
             EndTimeTrackPosition = "00:00";
-            //m_timerTrack = new DispatcherTimer
-            //{
-            //    Interval = TimeSpan.FromSeconds(1),
-            //};
-            //m_timerTrack.Tick += TrackTime;
+            SliderMinimum = 0.0;
 
             PlayList = new ObservableCollection<Track>();
         }
@@ -63,15 +69,7 @@ namespace MVVM_Player
             {
                 PlayTrack(track.Name);
             }
-        }));
-
-        public RelayCommand MouseDoubleClickCommand => m_mouseDoubleCommand ?? (m_mouseDoubleCommand = new RelayCommand(obj =>
-        {
-            if (obj is Track track)
-            {
-                PlayTrack(track.Name);
-            }
-        }));
+        }));     
 
         public RelayCommand PauseCommand => m_pause ?? (m_pause = new RelayCommand(obj =>
         {
@@ -81,7 +79,6 @@ namespace MVVM_Player
         public RelayCommand StopCommand => m_stop ?? (m_stop = new RelayCommand(obj =>
         {
             LoadedMode = MediaState.Stop;
-            //m_timerTrack.Tick -= TrackTime;
         }));
 
         public RelayCommand AddMediaFilesCommand => m_openMediaFiles ?? (m_openMediaFiles = new RelayCommand(obj =>
@@ -89,7 +86,7 @@ namespace MVVM_Player
             using (var openFileDialog = new OpenFileDialog
             {
                 Multiselect = true,
-                Filter = "Media files (*.mp3)|*.mp3|Playlist open (*.playlist)|*.playlist",
+                Filter = "Media files (*.mp3)|*.mp3|Paylist open (*.playlist)|*.playlist",
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyComputer)
             })
             {
@@ -100,16 +97,16 @@ namespace MVVM_Player
                 {
                     default:
                     case ".mp3":
-                        foreach (var name in openFileDialog.FileNames)
+                        foreach (var fileName in openFileDialog.FileNames)
                         {
-                            if (PlayList.FirstOrDefault(f => f.FullName == name) != null)
+                            if (PlayList.FirstOrDefault(f => f.FullName == fileName) != null)
                                 continue;
 
                             PlayList.Add(new Track
                             {
-                                Name = Path.GetFileNameWithoutExtension(name),
-                                FullName = name,
-                                Source = new Uri(name)
+                                Name = Path.GetFileNameWithoutExtension(fileName),
+                                FullName = fileName,
+                                Source = new Uri(fileName)
                             });
                         }
                         break;
@@ -119,6 +116,70 @@ namespace MVVM_Player
                 }
 
                 SelectedTrack = PlayList.FirstOrDefault();
+            }
+        }));
+
+        public RelayCommand MouseDoubleClickCommand => m_mouseDoubleCommand ?? (m_mouseDoubleCommand = new RelayCommand(obj =>
+        {
+            if (obj is Track track)
+            {
+                PlayTrack(track.Name);
+            }
+        }));
+
+        public RelayCommand MediaEndedCommand => m_mediaEndedCommand ?? (m_mediaEndedCommand = new RelayCommand(obj =>
+        {
+            if (obj is Track track)
+            {
+                NextPlayTrack(track);
+            }
+        }));
+
+        public RelayCommand MediaOpenedCommand => m_mediaOpenedCommand ?? (m_mediaOpenedCommand = new RelayCommand(obj =>
+        {
+            if (obj is Duration duration && duration.HasTimeSpan)
+            {
+                var timespan = duration.TimeSpan;
+                EndTimeTrackPosition = timespan.ToString("mm\\:ss");
+
+                if (SliderMaximum != timespan.TotalSeconds)
+                    SliderMaximum = timespan.TotalSeconds;
+            }
+        }));
+
+        public RelayCommand TimerTrackCommand => m_timerTrackCommand ?? (m_timerTrackCommand = new RelayCommand(obj =>
+        {
+            if (obj is TimeSpan position)
+            {
+                StartTimeTrackPosition = position.ToString("mm\\:ss");
+                SliderValue = position.TotalSeconds;
+            }
+        }));
+
+        public RelayCommand SliderValueChangedCommand => m_sliderValueChangedCommand ?? (m_sliderValueChangedCommand = new RelayCommand(obj =>
+        {
+            if (obj is TimeSpan position)
+            {
+                StartTimeTrackPosition = position.ToString("mm\\:ss");
+                SliderValue = position.TotalSeconds;
+            }
+        }));
+
+        public RelayCommand MoveRightCommand => m_moveRightCommand ?? (m_moveRightCommand = new RelayCommand(obj =>
+        {
+            if (obj is TimeSpan position)
+            {
+                StartTimeTrackPosition = position.ToString("mm\\:ss");
+                SliderValue = position.TotalSeconds;
+            }
+        }));
+
+        public RelayCommand MoveLeftCommand => m_moveLeftCommand ?? (m_moveLeftCommand = new RelayCommand(obj =>
+        {
+            if (obj is TimeSpan position)
+            {
+                StartTimeTrackPosition = position.ToString("mm\\:ss");
+                SliderValue = position.TotalSeconds;
             }
         }));
 
@@ -213,6 +274,19 @@ namespace MVVM_Player
             }
         }
 
+        public double SliderMinimum
+        {
+            get { return m_sliderMinimum; }
+            set
+            {
+                if (m_sliderMinimum == value)
+                    return;
+
+                m_sliderMinimum = value;
+                OnPropetyChanged("SliderMinimum");
+            }
+        }
+
         public double SliderMaximum
         {
             get { return m_sliderMaximum; }
@@ -250,33 +324,6 @@ namespace MVVM_Player
 
         #endregion // INotifyPropertyChanged
 
-        #region TimeTrackEvent 
-
-        //private void TrackTime(object sender, EventArgs e)
-        //{
-        //    if (CurrentTrack != null)
-        //    {
-        //        StartTimeTrackPosition = PositionTrack.ToString(@"mm\:ss");
-        //        SliderValue = PositionTrack.TotalSeconds;
-
-        //        //Slidar.Value = PositionTrack.TotalSeconds;
-
-        //        //if (myPlayerMedia.NaturalDuration.HasTimeSpan)
-        //        //{
-        //        //    myPlayerMedia.MediaEnded += Switch_Checked;
-        //        //    EndTrackTime.Content = myPlayerMedia.NaturalDuration.TimeSpan.ToString(@"mm\:ss");
-        //        //    Slidar.Maximum = myPlayerMedia.NaturalDuration.TimeSpan.TotalSeconds;
-        //        //}
-        //    }
-        //    else
-        //    {
-        //        StartTimeTrackPosition = "00:00";
-        //        EndTimeTrackPosition = "00:00";
-        //    }
-        //}
-
-        #endregion // TimeTrackEvent
-
         #region Helpers
 
         private void PlayTrack(string selectedNameTrack)
@@ -289,9 +336,22 @@ namespace MVVM_Player
                     CurrentTrack = currentTrack.Source;
                     CurrentNameTrack = Path.GetFileNameWithoutExtension(currentTrack.FullName);
                     LoadedMode = MediaState.Play;
-                    EndTimeTrackPosition = PositionTrack.ToString(@"mm\:ss");
-                    //m_timerTrack.Start();
                 }
+            }
+        }
+
+        private void NextPlayTrack(Track selectedTrack)
+        {
+            if (PlayList.Count > 0)
+            {
+                var currentIndexTrack = PlayList.IndexOf(selectedTrack);
+                var nextIndexTrack = currentIndexTrack + 1;
+                var nextTrack = nextIndexTrack < PlayList.Count ? PlayList[nextIndexTrack] : PlayList.FirstOrDefault();
+                CurrentTrack = nextTrack.Source;
+                CurrentNameTrack = Path.GetFileNameWithoutExtension(nextTrack.FullName);
+                SelectedTrack = nextTrack;
+                SliderMinimum = SliderMaximum = SliderValue = 0.0;
+                LoadedMode = MediaState.Play;
             }
         }
 

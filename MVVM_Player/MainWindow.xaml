@@ -4,13 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:i="clr-namespace:MVVM_Player.Helpers"
+        xmlns:media="clr-namespace:MVVM_Player.Helpers.MediaBehaviour"
         mc:Ignorable="d"
         Icon="Images/music-player.png"
         Title="Audio Player" Height="540" Width="400"
         WindowStyle="SingleBorderWindow"
         ResizeMode="CanMinimize"
         WindowStartupLocation="CenterScreen"
-        Background="AntiqueWhite">
+        Background="ForestGreen">
     <Grid>
         <StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -18,7 +19,7 @@
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button>
+                <Button media:MediaBehaviour.ButtonMoveLeftCommand="{Binding MoveLeftCommand}">
                     <Image Source="Images/moveLeft5.png"/>
                 </Button>
                 <Button Command="{Binding PauseCommand}">
@@ -30,7 +31,7 @@
                 <Button Command="{Binding PlayCommand}" CommandParameter="{Binding SelectedTrack}">
                     <Image Source="Images/play.png"/>
                 </Button>
-                <Button>
+                <Button media:MediaBehaviour.ButtonMoveRightCommand="{Binding MoveRightCommand}">
                     <Image Source="Images/moveRight5.png"/>
                 </Button>
 
@@ -46,12 +47,20 @@
                 <Label Margin="220,0,0,0" Content="{Binding EndTimeTrackPosition}"/>
             </StackPanel>
 
-            <Slider Value="{Binding SliderValue}" Maximum="{Binding SliderMaximum}"/>
+            <Slider 
+                Value="{Binding SliderValue}" 
+                Minimum="{Binding SliderMinimum}" 
+                Maximum="{Binding SliderMaximum}"
+                media:MediaBehaviour.SliderValueChangedCommand="{Binding SliderValueChangedCommand}"/>
 
             <StackPanel Orientation="Vertical" VerticalAlignment="Bottom">
                 <MediaElement 
                     Source="{Binding CurrentTrack}" 
                     LoadedBehavior="{Binding LoadedMode}"
+                    media:MediaBehaviour.TimerTrackCommand="{Binding TimerTrackCommand}"
+                    media:MediaBehaviour.MediaOpenedCommand="{Binding MediaOpenedCommand}"
+                    media:MediaBehaviour.MediaEndedCommand="{Binding MediaEndedCommand}"
+                    media:MediaBehaviour.MediaEndedCommandParameter="{Binding SelectedTrack}"
                     />
                 <ListBox ItemsSource="{Binding PlayList}" 
                          SelectedItem="{Binding SelectedTrack}" 
