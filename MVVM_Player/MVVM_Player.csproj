@@ -35,6 +35,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MaterialDesignColors, Version=1.2.0.325, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialDesignColors.1.2.0\lib\net45\MaterialDesignColors.dll</HintPath>
+    </Reference>
+    <Reference Include="MaterialDesignThemes.Wpf, Version=2.6.0.325, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialDesignThemes.2.6.0\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Forms" />
@@ -92,6 +98,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -121,6 +128,16 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Helpers\Elements\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\baseline-fast_forward-24px.svg" />
+    <Content Include="Images\baseline-fast_rewind-24px.svg" />
+    <Content Include="Images\baseline-loop-24px.svg" />
+    <Content Include="Images\baseline-pause-24px.svg" />
+    <Content Include="Images\baseline-play_arrow-24px.svg" />
+    <Content Include="Images\baseline-queue_music-24px.svg" />
+    <Content Include="Images\baseline-shuffle-24px.svg" />
+    <Content Include="Images\baseline-stop-24px.svg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

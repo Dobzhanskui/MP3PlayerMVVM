@@ -4,7 +4,15 @@
              xmlns:local="clr-namespace:MVVM_Player"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <Style TargetType="Button">
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+            <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />
+        </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+        <!--<Style TargetType="Button">
             <Setter Property="Height" Value="25"/>
             <Setter Property="Width"  Value="25"/>
             <Setter Property="Margin" Value="5,5"/>
@@ -29,6 +37,6 @@
         </Style>
         <Style TargetType="Label">
             <Setter Property="Width" Value="38"/>
-        </Style>
+        </Style>-->
     </Application.Resources>
 </Application>

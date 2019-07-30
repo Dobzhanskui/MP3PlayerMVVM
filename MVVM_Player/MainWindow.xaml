@@ -11,43 +11,59 @@
         WindowStyle="SingleBorderWindow"
         ResizeMode="CanMinimize"
         WindowStartupLocation="CenterScreen"
-        Background="ForestGreen">
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}">
     <Grid>
-        <StackPanel>
+        <StackPanel Margin="5,5">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <TextBlock Text="{Binding CurrentNameTrack}"/>
+                <TextBlock Style="{DynamicResource MaterialDesignTitleTextBlock}" Text="{Binding CurrentNameTrack}"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button media:MediaBehaviour.ButtonClickLeftCommand="{Binding TimerTrackCommand}">
-                    <Image Source="Images/moveLeft5.png"/>
+                <Button Style="{DynamicResource MaterialDesignRaisedButton}" 
+                        media:MediaBehaviour.ButtonClickLeftCommand="{Binding TimerTrackCommand}">
+                    <Path Data="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z" Fill="AliceBlue" Height="20" Width="20" Stretch="Fill"/>
                 </Button>
-                <Button Command="{Binding PauseCommand}">
-                    <Image Source="Images/player_pause.png"/>
+                <Button Style="{DynamicResource MaterialDesignRaisedButton}" Command="{Binding PauseCommand}">
+                    <Path Data="M6 19h4V5H6v14zm8-14v14h4V5h-4z" Fill="AliceBlue" Height="20" Width="20" Stretch="Fill"/>
                 </Button>
-                <Button Command="{Binding StopCommand}">
-                    <Image Source="Images/stop-play.png"/>
+                <Button Style="{DynamicResource MaterialDesignRaisedButton}" Command="{Binding StopCommand}">
+                    <Path Data="M6 6h12v12H6z" Fill="AliceBlue" Height="20" Width="20" Stretch="Fill"/>
                 </Button>
-                <Button Command="{Binding PlayCommand}" CommandParameter="{Binding SelectedTrack}">
-                    <Image Source="Images/play.png"/>
+                <Button Style="{DynamicResource MaterialDesignRaisedButton}" 
+                        Command="{Binding PlayCommand}" 
+                        CommandParameter="{Binding SelectedTrack}">
+                    <Path Data="M8 5v14l11-7z" Fill="AliceBlue" Height="20" Width="20" Stretch="Fill"/>
                 </Button>
-                <Button media:MediaBehaviour.ButtonClickRightCommand="{Binding TimerTrackCommand}">
-                    <Image Source="Images/moveRight5.png"/>
+                <Button Style="{DynamicResource MaterialDesignRaisedButton}" 
+                        media:MediaBehaviour.ButtonClickRightCommand="{Binding TimerTrackCommand}">
+                    <Path Data="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z" Fill="AliceBlue" Height="20" Width="20" Stretch="Fill"/>
                 </Button>
 
-                <ToggleButton media:MediaBehaviour.ButtonReplayCommand="{Binding ButtonReplayCommand}">
-                    <Image Source="Images/replay.png"/>
+                <ToggleButton Style="{DynamicResource MaterialDesignSwitchToggleButton}" 
+                              media:MediaBehaviour.ButtonReplayCommand="{Binding ButtonReplayCommand}">
+                    <Path Data="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z" />
                 </ToggleButton>
-                <ToggleButton media:MediaBehaviour.ButtonRandomCommand="{Binding ButtonRandomCommand}">
-                    <Image Source="Images/Random.png"/>
+                <ToggleButton Style="{DynamicResource MaterialDesignSwitchToggleButton}"
+                              media:MediaBehaviour.ButtonRandomCommand="{Binding ButtonRandomCommand}">
+                    <Path Data="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z" Fill="AliceBlue"/>
                 </ToggleButton>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <Label Margin="50,0,0,0" Content="{Binding StartTimeTrackPosition}"/>
-                <Label Margin="220,0,0,0" Content="{Binding EndTimeTrackPosition}"/>
+                <Label Style="{DynamicResource MaterialDesignLabel}" 
+                       Margin="50,0,0,0" 
+                       Content="{Binding StartTimeTrackPosition}"/>
+                <Label Style="{DynamicResource MaterialDesignLabel}" 
+                       Margin="220,0,0,0" 
+                        Content="{Binding EndTimeTrackPosition}"/>
             </StackPanel>
 
-            <Slider 
+            <Slider Style="{DynamicResource MaterialDesignSlider}"
                 Value="{Binding SliderValue}" 
                 Minimum="{Binding SliderMinimum}" 
                 Maximum="{Binding SliderMaximum}"
@@ -62,15 +78,17 @@
                     media:MediaBehaviour.MediaEndedCommand="{Binding MediaEndedCommand}"
                     media:MediaBehaviour.MediaEndedCommandParameter="{Binding SelectedTrack}"
                     />
-                <ListBox ItemsSource="{Binding PlayList}" 
+                <ListBox Style="{DynamicResource MaterialDesignListBox}"
+                         Height="355"
+                         ItemsSource="{Binding PlayList}" 
                          SelectedItem="{Binding SelectedTrack}" 
-                         Background="LightYellow"
                          i:CommandBehaviour.DoubleClickCommand="{Binding MouseDoubleClickCommand}"
                          i:CommandBehaviour.DoubleClickCommandParameter="{Binding SelectedTrack}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Margin="5">
-                                <TextBlock FontSize="18" 
+                                <TextBlock Style="{DynamicResource MaterialDesignTitleTextBlock}"
+                                           FontSize="18" 
                                            Text="{Binding Path=Name}">
                                 </TextBlock>
                             </StackPanel>
@@ -80,8 +98,8 @@
             </StackPanel>
 
             <StackPanel Orientation="Horizontal">
-                <Button Command="{Binding AddMediaFilesCommand}">
-                    <Image Source="Images/add.png"/>
+                <Button Style="{DynamicResource MaterialDesignRaisedButton}" Command="{Binding AddMediaFilesCommand}">
+                    <Path Data="M15 6H3v2h12V6zm0 4H3v2h12v-2zM3 16h8v-2H3v2zM17 6v8.18c-.31-.11-.65-.18-1-.18-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3V8h3V6h-5z" Fill="AliceBlue"/>
                 </Button>
             </StackPanel>
         </StackPanel>
