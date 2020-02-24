@@ -5,103 +5,143 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:i="clr-namespace:MVVM_Player.Helpers"
         xmlns:media="clr-namespace:MVVM_Player.Helpers.MediaBehaviour"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Icon="Images/music-player.png"
-        Title="Audio Player" Height="540" Width="400"
-        WindowStyle="SingleBorderWindow"
-        ResizeMode="CanMinimize"
+        Height="550" Width="400"
+        WindowStyle="None"
         WindowStartupLocation="CenterScreen"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
-        TextElement.FontSize="13"
+        TextElement.FontSize="16"
         TextOptions.TextFormattingMode="Ideal"
         TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}">
     <Grid>
-        <StackPanel Margin="5,5">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <TextBlock Style="{DynamicResource MaterialDesignTitleTextBlock}" Text="{Binding CurrentNameTrack}"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.RowSpan="1" Background="#FF8522BD">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Background="{x:Null}">
+                <Button 
+                    Style="{DynamicResource MaterialDesignFloatingActionMiniAccentButton}" 
+                    Foreground="White" 
+                    BorderBrush="{x:Null}" 
+                    Width="20" 
+                    Height="20"
+                    i:CommandBehaviour.VisibilityClickCommand="{Binding VisibilityClickCommand}">
+                    <materialDesign:PackIcon Kind="EjectOutline"/>
+                </Button>
+                <Button 
+                    Style="{DynamicResource MaterialDesignFloatingActionMiniAccentButton}" 
+                    Foreground="White" 
+                    BorderBrush="{x:Null}" 
+                    Width="20" 
+                    Height="20"
+                    i:CommandBehaviour.PowerClickCommand="{Binding PowerClickCommand}">
+                    <materialDesign:PackIcon Kind="Power"/>
+                </Button>
             </StackPanel>
+        </Grid>
+        <Grid Grid.RowSpan="2" Margin="5,20">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <ScrollViewer 
+                    VerticalContentAlignment="Center" 
+                    HorizontalContentAlignment="Center" 
+                    HorizontalScrollBarVisibility="Auto" 
+                    VerticalScrollBarVisibility="Hidden" 
+                    CanContentScroll="True" 
+                    VerticalAlignment="Center" 
+                    HorizontalAlignment="Center" 
+                    FlowDirection="RightToLeft"
+                    media:MediaBehaviour.MoveTextCommand="{Binding ScrollViewerCommand}">
+                        <TextBlock Style="{DynamicResource MaterialDesignTitleTextBlock}" Text="{Binding CurrentNameTrack}"/>
+                    </ScrollViewer>
+                </StackPanel>
 
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Style="{DynamicResource MaterialDesignRaisedButton}" 
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Style="{DynamicResource MaterialDesignRaisedButton}" 
                         media:MediaBehaviour.ButtonClickLeftCommand="{Binding TimerTrackCommand}">
-                    <Path Data="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z" Fill="AliceBlue" Height="20" Width="20" Stretch="Fill"/>
-                </Button>
-                <Button Style="{DynamicResource MaterialDesignRaisedButton}" Command="{Binding PauseCommand}">
-                    <Path Data="M6 19h4V5H6v14zm8-14v14h4V5h-4z" Fill="AliceBlue" Height="20" Width="20" Stretch="Fill"/>
-                </Button>
-                <Button Style="{DynamicResource MaterialDesignRaisedButton}" Command="{Binding StopCommand}">
-                    <Path Data="M6 6h12v12H6z" Fill="AliceBlue" Height="20" Width="20" Stretch="Fill"/>
-                </Button>
-                <Button Style="{DynamicResource MaterialDesignRaisedButton}" 
+                        <Path Data="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z" Fill="AliceBlue" Height="20" Width="20" Stretch="Fill"/>
+                    </Button>
+                    <Button Style="{DynamicResource MaterialDesignRaisedButton}" Command="{Binding PauseCommand}">
+                        <Path Data="M6 19h4V5H6v14zm8-14v14h4V5h-4z" Fill="AliceBlue" Height="20" Width="20" Stretch="Fill"/>
+                    </Button>
+                    <Button Style="{DynamicResource MaterialDesignRaisedButton}" Command="{Binding StopCommand}">
+                        <Path Data="M6 6h12v12H6z" Fill="AliceBlue" Height="20" Width="20" Stretch="Fill"/>
+                    </Button>
+                    <Button Style="{DynamicResource MaterialDesignRaisedButton}" 
                         Command="{Binding PlayCommand}" 
                         CommandParameter="{Binding SelectedTrack}">
-                    <Path Data="M8 5v14l11-7z" Fill="AliceBlue" Height="20" Width="20" Stretch="Fill"/>
-                </Button>
-                <Button Style="{DynamicResource MaterialDesignRaisedButton}" 
+                        <Path Data="M8 5v14l11-7z" Fill="AliceBlue" Height="20" Width="20" Stretch="Fill"/>
+                    </Button>
+                    <Button Style="{DynamicResource MaterialDesignRaisedButton}" 
                         media:MediaBehaviour.ButtonClickRightCommand="{Binding TimerTrackCommand}">
-                    <Path Data="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z" Fill="AliceBlue" Height="20" Width="20" Stretch="Fill"/>
-                </Button>
+                        <Path Data="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z" Fill="AliceBlue" Height="20" Width="20" Stretch="Fill"/>
+                    </Button>
 
-                <ToggleButton Style="{DynamicResource MaterialDesignFlatPrimaryToggleButton}" 
+                    <ToggleButton Style="{DynamicResource MaterialDesignFlatPrimaryToggleButton}" 
                               media:MediaBehaviour.ButtonReplayCommand="{Binding ButtonReplayCommand}">
-                    <Path Data="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z" Fill="Blue" Height="20" Width="20" Stretch="Fill"/>
-                </ToggleButton>
-                <ToggleButton Style="{DynamicResource MaterialDesignFlatPrimaryToggleButton}"
+                        <materialDesign:PackIcon Kind="AxisXRotateCounterclockwise" Height="30" Width="30"/>
+                    </ToggleButton>
+                    <ToggleButton Style="{DynamicResource MaterialDesignFlatPrimaryToggleButton}"
                               media:MediaBehaviour.ButtonRandomCommand="{Binding ButtonRandomCommand}">
-                    <Path Data="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z" Fill="Blue" Height="20" Width="20" Stretch="Fill"/>
-                </ToggleButton>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Style="{DynamicResource MaterialDesignLabel}" 
-                       Margin="50,0,0,0" 
+                        <materialDesign:PackIcon Kind="Shuffle" Height="30" Width="30"/>
+                    </ToggleButton>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Style="{DynamicResource MaterialDesignLabel}" 
+                       Margin="10,0,0,0" 
                        Content="{Binding StartTimeTrackPosition}"/>
-                <Label Style="{DynamicResource MaterialDesignLabel}" 
-                       Margin="220,0,0,0" 
-                        Content="{Binding EndTimeTrackPosition}"/>
-            </StackPanel>
+                    <Label Style="{DynamicResource MaterialDesignLabel}" 
+                       Margin="230,0,0,0" 
+                       Content="{Binding EndTimeTrackPosition}"/>
+                </StackPanel>
 
-            <Slider Style="{DynamicResource MaterialDesignSlider}"
+                <Slider Style="{DynamicResource MaterialDesignSlider}"
                 Value="{Binding SliderValue}" 
                 Minimum="{Binding SliderMinimum}" 
                 Maximum="{Binding SliderMaximum}"
                 media:MediaBehaviour.SliderValueChangedCommand="{Binding TimerTrackCommand}"/>
 
-            <StackPanel Orientation="Vertical" VerticalAlignment="Bottom">
-                <MediaElement 
+                <StackPanel Orientation="Vertical" VerticalAlignment="Bottom">
+                    <MediaElement 
                     Source="{Binding CurrentTrack}" 
                     LoadedBehavior="{Binding LoadedMode}"
                     media:MediaBehaviour.TimerTrackCommand="{Binding TimerTrackCommand}"
                     media:MediaBehaviour.MediaOpenedCommand="{Binding MediaOpenedCommand}"
                     media:MediaBehaviour.MediaEndedCommand="{Binding MediaEndedCommand}"
-                    media:MediaBehaviour.MediaEndedCommandParameter="{Binding SelectedTrack}"
-                    />
-                <ListBox Style="{DynamicResource MaterialDesignListBox}"
+                    media:MediaBehaviour.MediaEndedCommandParameter="{Binding SelectedTrack}"/>
+                    <ListBox Style="{DynamicResource MaterialDesignListBox}"
                          Height="355"
                          ItemsSource="{Binding PlayList}" 
                          SelectedItem="{Binding SelectedTrack}" 
                          i:CommandBehaviour.DoubleClickCommand="{Binding MouseDoubleClickCommand}"
                          i:CommandBehaviour.DoubleClickCommandParameter="{Binding SelectedTrack}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Margin="5">
-                                <TextBlock Style="{DynamicResource MaterialDesignTitleTextBlock}"
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="5">
+                                    <TextBlock Style="{DynamicResource MaterialDesignTitleTextBlock}"
                                            FontSize="18" 
                                            Text="{Binding Path=Name}">
-                                </TextBlock>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            </StackPanel>
+                                    </TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
 
-            <StackPanel Orientation="Horizontal">
-                <Button Style="{DynamicResource MaterialDesignRaisedButton}" Command="{Binding AddMediaFilesCommand}">
-                    <Path Data="M15 6H3v2h12V6zm0 4H3v2h12v-2zM3 16h8v-2H3v2zM17 6v8.18c-.31-.11-.65-.18-1-.18-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3V8h3V6h-5z" Fill="AliceBlue"/>
-                </Button>
+                <StackPanel Orientation="Horizontal">
+                    <Button Style="{DynamicResource MaterialDesignRaisedButton}" Command="{Binding AddMediaFilesCommand}">
+                        <Path Data="M15 6H3v2h12V6zm0 4H3v2h12v-2zM3 16h8v-2H3v2zM17 6v8.18c-.31-.11-.65-.18-1-.18-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3V8h3V6h-5z" Fill="AliceBlue"/>
+                    </Button>
+                </StackPanel>
             </StackPanel>
-        </StackPanel>
+        </Grid>
     </Grid>
 </Window>

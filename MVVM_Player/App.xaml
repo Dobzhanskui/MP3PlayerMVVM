@@ -6,37 +6,11 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-            <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
-            <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
-            <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
-            <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />
-        </ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-        <!--<Style TargetType="Button">
-            <Setter Property="Height" Value="25"/>
-            <Setter Property="Width"  Value="25"/>
-            <Setter Property="Margin" Value="5,5"/>
-            <Setter Property="Background" Value="Black"/>
-        </Style>
-        <Style TargetType="ToggleButton">
-            <Setter Property="Height" Value="25"/>
-            <Setter Property="Width"  Value="25"/>
-            <Setter Property="Margin" Value="5,5"/>
-            <Setter Property="Background" Value="Black"/>
-        </Style>
-        <Style TargetType="ListBox">
-            <Setter Property="Height" Value="360"/>
-            <Setter Property="Margin" Value="5,5"/>
-            <Setter Property="BorderBrush" Value="Black"/>
-        </Style>
-        <Style TargetType="Slider">
-            <Setter Property="Margin" Value="75,0,75,0"/>
-        </Style>
-        <Style TargetType="MediaElement">
-            <Setter Property="Stretch" Value="UniformToFill"/>
-        </Style>
-        <Style TargetType="Label">
-            <Setter Property="Width" Value="38"/>
-        </Style>-->
     </Application.Resources>
 </Application>

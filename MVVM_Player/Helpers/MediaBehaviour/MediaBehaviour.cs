@@ -12,6 +12,7 @@ namespace MVVM_Player.Helpers.MediaBehaviour
         #region Members
 
         private static DispatcherTimer m_timerTrack;
+        private static DispatcherTimer m_timerMoveText;
 
         #endregion // Members
 
@@ -52,6 +53,10 @@ namespace MVVM_Player.Helpers.MediaBehaviour
         public static readonly DependencyProperty ButtonReplayCommandProperty =
         DependencyProperty.RegisterAttached("ButtonReplayCommand", typeof(ICommand), typeof(MediaBehaviour),
         new FrameworkPropertyMetadata(new PropertyChangedCallback(ButtonReplayCommandChanged)));
+
+        public static readonly DependencyProperty MoveTextCommandProperty =
+        DependencyProperty.RegisterAttached("MoveTextCommand", typeof(ICommand), typeof(MediaBehaviour),
+        new FrameworkPropertyMetadata(new PropertyChangedCallback(MoveTextCommandChanged)));
 
         #endregion // DependencyProperty
 
@@ -174,6 +179,19 @@ namespace MVVM_Player.Helpers.MediaBehaviour
             }
         }
 
+        public static void MoveTextCommandChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+        {
+            if (dependencyObject is ScrollViewer scrollViewer)
+            {
+                m_timerMoveText = new DispatcherTimer
+                {
+                    Interval = TimeSpan.FromMilliseconds(250),
+                    Tag = scrollViewer
+                };
+                m_timerMoveText.Tick += timerMoveText_Tick;
+            }
+        }
+
         public static void SetMediaEndedCommand(UIElement uiElement, ICommand value)
         {
             uiElement.SetValue(MediaEndedCommandProperty, value);
@@ -219,6 +237,11 @@ namespace MVVM_Player.Helpers.MediaBehaviour
             uiElement.SetValue(ButtonReplayCommandProperty, value);
         }
 
+        public static void SetMoveTextCommand(UIElement uiElement, ICommand value)
+        {
+            uiElement.SetValue(MoveTextCommandProperty, value);
+        }
+
         public static ICommand GetMediaEndedCommand(UIElement element)
            => (ICommand)element.GetValue(MediaEndedCommandProperty);
 
@@ -246,6 +269,9 @@ namespace MVVM_Player.Helpers.MediaBehaviour
         public static ICommand GetButtonReplayCommand(UIElement element)
            => (ICommand)element.GetValue(ButtonReplayCommandProperty);
 
+        public static ICommand GetMoveTextCommand(UIElement element)
+            => (ICommand)element.GetValue(MoveTextCommandProperty);
+
         #endregion // Commands
 
         #region Events
@@ -261,6 +287,7 @@ namespace MVVM_Player.Helpers.MediaBehaviour
                     e.Handled = true;
                     command.Execute(parameter);
                     m_timerTrack.Stop();
+                    m_timerMoveText.Stop();
                 }
             }
         }
@@ -275,6 +302,7 @@ namespace MVVM_Player.Helpers.MediaBehaviour
                     e.Handled = true;
                     command.Execute(mediaElement.NaturalDuration);
                     m_timerTrack.Start();
+                    m_timerMoveText.Start();
                 }
             }
         }
@@ -287,6 +315,18 @@ namespace MVVM_Player.Helpers.MediaBehaviour
                 if (command != null)
                 {
                     command.Execute(mediaElement.Position);
+                }
+            }
+        }
+
+        private static void timerMoveText_Tick(object sender, EventArgs e)
+        {
+            if (sender is DispatcherTimer dispatcherTimer && dispatcherTimer.Tag is ScrollViewer scrollViewer)
+            {
+                var command = GetMoveTextCommand(scrollViewer);
+                if (command != null)
+                {
+                    command.Execute(scrollViewer);
                 }
             }
         }

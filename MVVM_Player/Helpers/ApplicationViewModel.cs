@@ -21,6 +21,9 @@ namespace MVVM_Player
         private RelayCommand m_pause;
         private RelayCommand m_stop;
         private RelayCommand m_mouseDoubleCommand;
+        private RelayCommand m_powerClickCommand;
+        private RelayCommand m_visibilityClickCommand;
+        private RelayCommand m_scrollViewerCommand;
 
         private Uri m_currentTrack;
         private string m_currentNameTrack;
@@ -34,6 +37,7 @@ namespace MVVM_Player
         private Track m_selectedTrack;
         private bool m_randomTracks;
         private bool m_replayTracks;
+        private double m_scrollViewerNum;
 
         #region Media
 
@@ -57,6 +61,7 @@ namespace MVVM_Player
             StartTimeTrackPosition = "00:00";
             EndTimeTrackPosition = "00:00";
             SliderMinimum = 0.0;
+            m_scrollViewerNum = 0.0;
 
             PlayList = new ObservableCollection<Track>();
         }
@@ -128,6 +133,43 @@ namespace MVVM_Player
             if (obj is Track track)
             {
                 PlayTrack(track.Name);
+            }
+        }));
+
+        public RelayCommand PowerClickCommand => m_powerClickCommand ?? (m_powerClickCommand = new RelayCommand(obj =>
+        {
+            if (obj is ClickMode clickMode && clickMode == ClickMode.Release)
+            {
+                System.Windows.Application.Current.Shutdown();
+            }
+        }));
+
+        public RelayCommand VisibilityClickCommand => m_visibilityClickCommand ?? (m_visibilityClickCommand = new RelayCommand(obj =>
+        {
+            if (obj is ClickMode clickMode && clickMode == ClickMode.Release)
+            {
+                switch (System.Windows.Application.Current.MainWindow.WindowState)
+                {
+                    case WindowState.Normal:
+                        System.Windows.Application.Current.MainWindow.WindowState = WindowState.Minimized;
+                        break;
+                    case WindowState.Maximized:
+                        System.Windows.Application.Current.MainWindow.WindowState = WindowState.Normal;
+                        break;
+                }
+            }
+        }));
+
+        public RelayCommand ScrollViewerCommand => m_scrollViewerCommand ?? (m_scrollViewerCommand = new RelayCommand(obj =>
+        {
+            if (obj is ScrollViewer scrollViewer || LoadedMode != MediaState.Stop || LoadedMode !=)
+            {
+                try
+                {
+                    scrollViewer.ScrollToHorizontalOffset(m_scrollViewerNum);
+                    m_scrollViewerNum++;
+                }
+                catch { }
             }
         }));
 
